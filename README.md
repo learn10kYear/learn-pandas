@@ -13,3 +13,5 @@ https://youtu.be/4ntwbAWnKbg
 https://youtu.be/3m8Bb01uNNE
 6) Python初級 - 機器學習 - Scikit-learn - Regression 回歸|AI|人工智能|數據分析|教學|廣東話
 https://youtu.be/QyYZT8o-f3U
+7) Python初級 - 機器學習 - Scikit-learn - Classification 分類|AI|人工智能|數據分析|教學|廣東話
+https://youtu.be/JKn0OoHSoRo
