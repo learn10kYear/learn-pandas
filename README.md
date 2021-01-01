@@ -15,3 +15,5 @@ https://youtu.be/3m8Bb01uNNE
 https://youtu.be/QyYZT8o-f3U
 7) Python初級 - 機器學習 - Scikit-learn - Classification 分類|AI|人工智能|數據分析|教學|廣東話
 https://youtu.be/JKn0OoHSoRo
+8) Python 初級 - 機器學習：scikit-learn - Clustering + Dimensionality reduction 聚類+降維|AI|人工智能|數據分析|教學|廣東話
+https://youtu.be/UgXyK-k-CgM
