@@ -1,5 +1,5 @@
 # learn-pandas
-Learning numpy, pandas, scikit-learn 教學|廣東話
+Learn numpy, pandas, scikit-learn in Cantonese 教學|廣東話
 
 **Python初級 - 數據科學 數據分析**
 1) Numpy 入門教程
