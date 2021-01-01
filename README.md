@@ -12,14 +12,11 @@ https://youtu.be/jrd8shHEVFQ
 https://youtu.be/4ntwbAWnKbg
 
 **Python初級 - 機器學習 人工智能 AI**
-5) Scikit-learn 入門
+1) Scikit-learn 入門 
 https://youtu.be/3m8Bb01uNNE
-
-6) Scikit-learn - Regression 回歸
+2) Scikit-learn - Regression 回歸
 https://youtu.be/QyYZT8o-f3U
-
-7) Scikit-learn - Classification 分類
+3) Scikit-learn - Classification 分類
 https://youtu.be/JKn0OoHSoRo
-
-8) Scikit-learn - Clustering + Dimensionality reduction 聚類+降維
+4) Scikit-learn - Clustering + Dimensionality reduction 聚類+降維
 https://youtu.be/UgXyK-k-CgM
