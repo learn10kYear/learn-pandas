@@ -193,6 +193,8 @@ d) REAL
 e) BLOB
 */
 
+--FROM: https://www.sqlite.org/datatype3.html
+
 --The affinity of a column is determined by the declared type of the column, according to the following rules in the order shown:
 --1) If the declared type contains the string "INT" then it is assigned INTEGER affinity.
 --2) If the declared type of the column contains any of the strings "CHAR", "CLOB", or "TEXT" then that column has TEXT affinity. Notice that the type VARCHAR contains the string "CHAR" and is thus assigned TEXT affinity.
