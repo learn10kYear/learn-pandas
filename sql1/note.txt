@@ -1,0 +1,297 @@
+/**********************************
+ SELECT COMMAND
+**********************************/
+
+/*COMMENT*/
+--SELECT 1; -- comment line
+/*
+comment lines
+*/
+
+/*SELECT VALUES*/
+SELECT 1; -- select a single value
+SELECT 1,2,'paul'; -- select multiple values
+SELECT 'Hello, ' || 'World'; -- concatenation
+SELECT 1 AS col1; -- use AS to rename a column
+SELECT sqlite_version(); -- SQLite version function
+
+/**********************************
+ SELECT ... FROM ...
+**********************************/
+
+SELECT * FROM person;
+SELECT name, email FROM person;
+SELECT name, name, * FROM person;
+
+SELECT email, name as person_name FROM person;
+SELECT email, name as 'Person Name' FROM person;
+SELECT person.email, person.name FROM person;
+
+SELECT upper(name), email FROM person;
+SELECT 'Name: ' || name, email FROM person;
+
+SELECT * FROM person ORDER BY money ASC; --ascending order of money
+SELECT * FROM person ORDER BY departmentId DESC; --descending order of departmentId
+
+/**********************************
+ SELECT ... FROM ... WHERE ...
+**********************************/
+SELECT * FROM person WHERE money >10;
+SELECT * FROM person WHERE departmentId = 1;
+SELECT * FROM person WHERE email LIKE '%gmail%';  --gmail in the middle
+SELECT * FROM person WHERE email LIKE '%gmail'; --gmail at the end
+SELECT * FROM person WHERE email LIKE 'gmail%'; --gmail at the beginning
+
+SELECT * FROM person WHERE money>10 AND departmentId = 1; -- multiple conditions
+SELECT * FROM person WHERE money>10 OR departmentId = 1;-- multiple conditions
+SELECT * FROM person WHERE money BETWEEN 10 AND 1000;
+
+SELECT * FROM person WHERE money IS NULL;  -- IS NULL
+SELECT * FROM person WHERE money IS NOT NULL; -- IS NOT NULL
+
+/**********************************
+ Joining multiple tables
+**********************************/
+SELECT person.name, department.name
+FROM person, department 
+WHERE person.departmentId = department.id;
+
+SELECT p.name as 'Person', d.name as 'Department'
+FROM person p, department d
+WHERE p.departmentId = d.id;
+
+/**********************************
+ GROUP BY with AGGREGATE FUNCTION
+  - avg(), count(), max(), min(), sum()
+**********************************/
+--Person count for each department
+SELECT count(*) FROM person;
+SELECT departmentId, count(*) 
+FROM person GROUP BY departmentId;
+
+--GROUP & JOIN
+SELECT d.name as 'Department', count(*) as Count
+FROM person p, department d
+WHERE p.departmentId = d.id
+
+--avg money for each department
+SELECT d.name as 'Department', avg(p.money)
+FROM person p, department d
+WHERE p.departmentId = d.id
+GROUP BY departmentId;
+
+--max money for each department
+SELECT d.name as 'Department', max(p.money)
+FROM person p, department d
+WHERE p.departmentId = d.id
+GROUP BY departmentId;
+
+--min money for each department
+SELECT d.name as 'Department', min(p.money)
+FROM person p, department d
+WHERE p.departmentId = d.id
+GROUP BY departmentId;
+
+/**********************************
+ HAVING - APPLY to aggregated data
+**********************************/
+--only report the group with sum(money) > 50
+SELECT d.name as 'Department', sum(money)
+FROM person p, department d
+WHERE p.departmentId = d.id
+GROUP BY departmentId
+HAVING sum(money) > 50;
+
+--only report the group with sum(money) > 50
+SELECT d.name as 'Department', sum(money) as SUM
+FROM person p, department d
+WHERE p.departmentId = d.id
+GROUP BY departmentId
+HAVING SUM > 50;
+
+--only report person count larger than 1
+SELECT count(*) FROM person;
+SELECT departmentId, count(*) FROM person GROUP BY departmentId
+HAVING count(*) >1;
+
+/**********************************
+ SUB QUERY
+**********************************/
+SELECT Person FROM
+    (SELECT p.name as 'Person', d.name as 'Department'
+      FROM person p, department d
+      WHERE p.departmentId = d.id) 
+WHERE Department = 'IT';
+
+/**********************************
+ CREATE TABLE (for SQLite)
+**********************************/
+
+PRAGMA foreign_keys=off;
+
+--DEPARTMENT TABLE
+DROP TABLE IF EXISTS department;
+CREATE TABLE  IF NOT EXISTS department (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT
+);
+
+--PERSON TABLE
+DROP TABLE IF EXISTS person; 
+--CREATE TABLE IF NOT EXISTS person (...);
+
+CREATE TABLE IF NOT EXISTS person (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    email TEXT DEFAULT 'email@sql.demo',
+    money REAL,
+    departmentId INTEGER REFERENCES department (id) ON DELETE CASCADE
+);
+
+--ON DELETE referential integrity
+-- REFERENCES {foreign_table} ({field}) ON UPDATE {NO ACTION | SET NULL | SET DEFAULT | RESTRICT | CASCADE}
+--   When I delete the referred record in department table,
+--    1) NO ACTION: Do nothing
+--    2) SET NULL: departmentId of person table set to NULL
+--    3) SET DEFAULT: departmentId of person table set to DEFAULT value
+--    4) RESTRICT: cannot delete department record if it is in use
+--    5) CASCADE: delete the person record that use this department id
+-- PRAGMA foreign_keys=off; -- SQLITE ONLY disable foreign key check
+-- PRAGMA foreign_keys=on; -- SQLITE ONLY enable foreign key check
+
+PRAGMA foreign_keys=on;
+
+--Insert department data
+INSERT INTO department(name) VALUES ('IT');
+INSERT INTO department(name) VALUES ('Sales');
+
+SELECT * FROM department;
+
+--Insert person data
+INSERT INTO person(name, email, money, departmentId) 
+VALUES ('Paul', 'paul@kfsoft.info', 100, 1);
+INSERT INTO person(name, email, money, departmentId) 
+VALUES ('John', 'john@gmail.com', 200, 1);
+INSERT INTO person(name, email, money, departmentId) 
+VALUES ('May', 'may@gmail.com', 50, 2);
+
+SELECT * FROM person;
+
+--Delete referential integrity test
+DELETE FROM department WHERE id=1;
+SELECT * FROM person;
+
+/**********************************
+  Column Affinity
+**********************************/
+
+/*
+a) TEXT
+b) NUMERIC
+c) INTEGER
+d) REAL
+e) BLOB
+*/
+
+--The affinity of a column is determined by the declared type of the column, according to the following rules in the order shown:
+--1) If the declared type contains the string "INT" then it is assigned INTEGER affinity.
+--2) If the declared type of the column contains any of the strings "CHAR", "CLOB", or "TEXT" then that column has TEXT affinity. Notice that the type VARCHAR contains the string "CHAR" and is thus assigned TEXT affinity.
+--3) If the declared type for a column contains the string "BLOB" or if no type is specified then the column has affinity BLOB.
+--4) If the declared type for a column contains any of the strings "REAL", "FLOA", or "DOUB" then the column has REAL affinity.
+--5) Otherwise, the affinity is NUMERIC.
+--Note that the order of the rules for determining column affinity is important. A column whose declared type is "CHARINT" will match both rules 1 and 2 but the first rule takes precedence and so the column affinity will be INTEGER.
+
+-- DEMO use SQLiteStudio to create table manually.
+
+DROP TABLE room;
+CREATE TABLE room (
+    id         INTEGER         PRIMARY KEY AUTOINCREMENT,
+	name       TEXT,
+    area1      INTEGER,
+    area2      REAL,
+    area3      SUPERINT,
+    createDate DATETIME123456789
+);
+
+SELECT * FROM room;
+
+/**********************************
+  CONVERSION
+**********************************/
+DELETE FROM room;
+INSERT INTO room (area1, area2, area3, createDate) VALUES(100.0, 100.0, 100.0, 100.0);   -- INTEGER
+INSERT INTO room (area1, area2, area3, createDate) VALUES('100.0', '100.0', '100.0', '100.0'); --INTEGER
+INSERT INTO room (area1, area2, area3, createDate) VALUES('100.1', '100.1', '100.1', '100.1');  --REAL
+INSERT INTO room (area1, area2, area3, createDate) VALUES('xxx', 'xxx', 'xxx', 'xxx'); --TEXT
+
+SELECT area1, typeof(area1), area2, typeof(area2), area3, typeof(area3), createDate, typeof(createDate) FROM room;
+
+/**********************************
+ DATE TIME
+**********************************/
+SELECT date(), datetime(), time();
+SELECT date('now');
+SELECT date('now', '-14 day') as two_week_ago; -- 14 days ago
+SELECT strftime('%s','now'); -- seconds since 1970-01-01 (timestamp)
+SELECT strftime('%s','2023-01-01');    
+SELECT strftime('%s', date('now', '-1 day')); -- seconds since yesterday
+SELECT strftime('%d-%m-%Y','now'); -- day-month-year
+
+/**********************************
+ INSERT DATETIME
+**********************************/
+INSERT INTO room (createDate) VALUES (datetime());
+INSERT INTO room (createDate) VALUES (strftime('%s','now')); -- 1627361661
+SELECT * FROM room;
+
+# CONVERT TIMESTAMP TO PYTHON
+from datetime import datetime
+
+timestamp = 1627361661
+createDate = datetime.fromtimestamp(timestamp)
+
+print(createDate.year)
+print(createDate.month)
+print(createDate.day)
+
+print(createDate.hour)
+print(createDate.minute)
+print(createDate.second)
+
+print(createDate) # 2021-07-27 12:54:21
+
+/**********************************
+ UPDATE ... SET ... WHERE
+**********************************/
+UPDATE room SET area1 = 50;
+UPDATE room SET area1 = 50, name = 'Test';
+UPDATE room SET area1 = 200 WHERE id>=2;
+UPDATE room SET area1 = area1 + 10;
+UPDATE room SET area1 = area1 + area2;
+
+/**********************************
+ TRANSACTION (COMMIT / ROLLBACK)
+**********************************/
+BEGIN TRANSACTION;
+
+	UPDATE person SET money = money - 10 
+	WHERE name = 'Paul';
+ 
+	UPDATE person SET money = money + 10
+	WHERE name = 'John';
+
+COMMIT;  --OR END TRANSACTION;
+
+/**********************************
+ DELETE ... WHERE
+**********************************/
+DELETE FROM room;
+DELETE FROM room WHERE area1 > 0;
+
+SELECT area1, area2, area3 FROM room;
+
+/**********************************
+ DROP TABLE
+**********************************/
+DROP TABLE IF EXISTS room;
+
