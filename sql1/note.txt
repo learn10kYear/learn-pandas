@@ -207,11 +207,11 @@ e) BLOB
 
 DROP TABLE room;
 CREATE TABLE room (
-    id         INTEGER         PRIMARY KEY AUTOINCREMENT,
-	name       TEXT,
-    area1      INTEGER,
-    area2      REAL,
-    area3      SUPERINT,
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT,
+    area1 INTEGER,
+    area2 REAL,
+    area3 SUPERINT,
     createDate DATETIME123456789
 );
 
