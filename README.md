@@ -11,6 +11,12 @@ https://youtu.be/jrd8shHEVFQ
 4) Pandas 類別 + 樣式
 https://youtu.be/4ntwbAWnKbg
 
+**Database初級 - Relational Database 關聯式數據庫**
+1) Database初級：SQL入門 
+https://youtu.be/OtM74u3Fbw0
+2) Database初級：JOIN連接 
+https://youtu.be/tpDvgr7qHsw
+
 **Python初級 - 機器學習 人工智能 AI**
 1) Scikit-learn 入門 
 https://youtu.be/3m8Bb01uNNE
